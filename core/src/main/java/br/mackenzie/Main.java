@@ -3,6 +3,8 @@ package br.mackenzie;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -34,6 +36,8 @@ public class Main extends ApplicationAdapter {
 
 
     private int shipWidth, shipHeight;
+    private Sound collisionSound;
+    private Music music;
 
     @Override
     public void create() {
@@ -42,18 +46,16 @@ public class Main extends ApplicationAdapter {
         backgroundImage = new Texture("background.png");
         obstacleTexture = new Texture("drop.png");
         obstacles = new Array<>();
+        collisionSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
+        music.setLooping(true);
+        music.setVolume(.5f);
+        music.play();
 
         shipWidth = image.getWidth();
         shipHeight = image.getHeight();
 
 
-
-
-        x = Gdx.graphics.getWidth() / 2f - shipWidth / 2f;
-        y = Gdx.graphics.getHeight() / 2f - shipHeight / 2f;
-    }
-    public void create() {
-        ...
         x = Gdx.graphics.getWidth() / 2f - shipWidth / 2f;
         y = Gdx.graphics.getHeight() / 2f - shipHeight / 2f;
     }
