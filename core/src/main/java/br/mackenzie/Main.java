@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -38,6 +39,8 @@ public class Main extends ApplicationAdapter {
     private int shipWidth, shipHeight;
     private Sound collisionSound;
     private Music music;
+    private Animation<Texture> animacaoNave;
+    private float stateTimeNave;
 
     @Override
     public void create() {
@@ -52,7 +55,19 @@ public class Main extends ApplicationAdapter {
         music.setVolume(.5f);
         music.play();
 
+        Texture[] framesNave = new Texture[8];   // ADICIONE DAQUI
+        for (int i = 0; i < 8; i++) {
+            framesNave[i] = new Texture("Run" + (i+1) + ".png");
+        }
+        animacaoNave = new Animation<>(0.1f, framesNave);
+        stateTimeNave = 0;                        // ATÉ AQUI
+
         shipWidth = image.getWidth();
+        shipHeight = image.getHeight();
+
+        x = Gdx.graphics.getWidth() / 2f - shipWidth / 2f;
+        y = Gdx.graphics.getHeight() / 2f - shipHeight / 2f;
+
         shipHeight = image.getHeight();
 
 
@@ -68,15 +83,12 @@ public class Main extends ApplicationAdapter {
         obstacles.add(obstacle);
     }
 
-    @Override
-    public void render() {
-    ...
-    }
+
     @Override
     public void render() {
         float delta = Gdx.graphics.getDeltaTime(); // tempo desde o último frame
-
-        // --- movimento ---
+        stateTimeNave += delta;
+        Texture frameAtualNave = animacaoNave.getKeyFrame(stateTimeNave, true);
         if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
             y += speed * delta;
         }
@@ -120,12 +132,13 @@ public class Main extends ApplicationAdapter {
 
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
         batch.begin();
-        batch.draw(image, x, y);
-        batch.end();
+        batch.draw(frameAtualNave, x, y, shipWidth, shipHeight);
         for (Rectangle obstacle : obstacles) {
             batch.draw(obstacleTexture, obstacle.x, obstacle.y, obstacle.width, obstacle.height);
         }
-    }
+        batch.end();
+        }
+
 
     @Override
     public void dispose() {
